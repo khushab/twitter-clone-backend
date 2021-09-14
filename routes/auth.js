@@ -2,12 +2,13 @@ const router = require('express').Router();
 const Users = require('../db/models/users')
 const bcrypt = require('bcrypt')
 const jwtGenerator = require('../utils/jwtGenerator')
+const authorization = require('../middlewares/authorization')
 
 //register route
 
 router.post('/register', async (req, res) => {
     try {
-        let { name, email, handle, password } = req.body;
+        let { name, email, handle, image, password } = req.body;
 
         const user = await Users.query().where('email', email)
 
@@ -24,8 +25,10 @@ router.post('/register', async (req, res) => {
             name: name,
             email: email,
             handle: handle,
+            image: image,
             password: password
         })
+        console.log(insertedUser)
 
         //Generate JWT
         const token = jwtGenerator(insertedUser.id)
@@ -64,6 +67,16 @@ router.post('/login', async (req, res) => {
     } catch (error) {
         console.log(error.message)
         res.status(500).send('Server Error')
+    }
+})
+
+router.get('/verify', authorization, async (req, res) => {
+    try {
+        res.send({ verified: true })
+
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).send({ verified: false })
     }
 })
 
