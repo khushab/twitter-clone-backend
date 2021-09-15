@@ -38,6 +38,37 @@ router.get('/me', authorization, async (req, res) => {
     }
 })
 
+// who to follow
+router.get('/whoToFollow', async (req, res) => {
+    try {
+        const id = 3
+        // const id = req.user
+        const allUsers = await Users.query()
+        const followingUsers = await Followings.query().where('userId', id)
+
+        const followingIds = {}
+        followingIds[id] = true
+        for (let i = 0; i < followingUsers.length; i++) {
+            followingIds[followingUsers[i]['followingId']] = true
+        }
+        const whoToFollow = []
+        for (let i = 0; i < allUsers.length; i++) {
+            let userId = allUsers[i]['id'].toString()
+            if (followingIds[userId] == true) {
+                continue
+            } else {
+                whoToFollow.push(allUsers[i])
+            }
+        }
+
+        res.send(whoToFollow)
+
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).send('Server Error')
+    }
+})
+
 // user tweets
 router.get('/mytweets', authorization, async (req, res) => {
     try {
