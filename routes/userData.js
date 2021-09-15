@@ -39,10 +39,10 @@ router.get('/me', authorization, async (req, res) => {
 })
 
 // who to follow
-router.get('/whoToFollow', async (req, res) => {
+router.get('/whoToFollow', authorization, async (req, res) => {
     try {
-        const id = 3
-        // const id = req.user
+        // const id = 3
+        const id = req.user
         const allUsers = await Users.query()
         const followingUsers = await Followings.query().where('userId', id)
 
@@ -67,6 +67,25 @@ router.get('/whoToFollow', async (req, res) => {
         console.log(error.message)
         res.status(500).send('Server Error')
     }
+})
+
+router.post('/follow', authorization, async (req, res) => {
+
+    try {
+        const id = req.user
+        const { followingId } = req.body
+        const insertedFollowing = await Followings.query().insert({
+            userId: id,
+            followingId: followingId
+        })
+
+        res.send(insertedFollowing)
+
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).send('Server Error')
+    }
+
 })
 
 // user tweets
