@@ -69,6 +69,33 @@ router.get('/whoToFollow', authorization, async (req, res) => {
     }
 })
 
+// my followings
+router.get('/userFollowings', authorization, async (req, res) => {
+    try {
+        const id = req.user
+        const followings = await Followings.query()
+        const peopleFollowedByUser = followings.filter((item) => item.userId == id)
+        let userIds = [];
+        for (let i = 0; i < peopleFollowedByUser.length; i++) {
+            userIds.push(peopleFollowedByUser[i]['followingId'])
+        }
+        // get the users
+        let users = [];
+        for (let i = 0; i < userIds.length; i++) {
+            const user = await Users.query().where('id', userIds[i])
+            users.push(user[0])
+        }
+        res.send(users)
+
+
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).send('Server Error')
+    }
+})
+
+
+// follow request
 router.post('/follow', authorization, async (req, res) => {
 
     try {
@@ -86,6 +113,25 @@ router.post('/follow', authorization, async (req, res) => {
         res.status(500).send('Server Error')
     }
 
+})
+
+// unfollow request
+router.post('/unFollow', authorization, async (req, res) => {
+    try {
+        const id = req.user
+        const { followingId } = req.body
+        const removeFollowing = await Followings.query().where('userId', id).where('followingId', followingId)
+        const toBeDeleted = removeFollowing[0]['id']
+
+        // delete from following table
+        const followingRemoved = await Followings.query().delete().where('id', toBeDeleted)
+
+        res.send(removeFollowing)
+
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).send('Server Error')
+    }
 })
 
 // user tweets
