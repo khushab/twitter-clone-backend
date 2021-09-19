@@ -3,7 +3,11 @@ const knexfile = require('./db/knexfile')
 const { Model } = require('objection');
 
 function dbSetup() {
-    const db = knex(knexfile.development);
+    if(process.env.NODE_ENV === "production"){
+        const db = knex(knexfile.production);
+    } else{
+        const db = knex(knexfile.development);
+    }
     Model.knex(db)
 }
 

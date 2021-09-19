@@ -23,4 +23,19 @@ module.exports = {
     },
     ...knexSnakeCaseMappers
   },
+  production: {
+    client: 'postgresql',
+    connection: process.env.DATABASE_URL,
+    pool: {
+      min: 2,
+      max: 10
+    },
+    migrations: {
+      tableName: 'knex_migrations'
+    },
+    seeds: {
+      directory: './seeds'
+    },
+    ...knexSnakeCaseMappers
+  },
 };

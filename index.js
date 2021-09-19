@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const dbSetup = require('./db-setup')
 
+const PORT = process.env.PORT || 3200
 
 
 const auth = require('./routes/auth')
@@ -16,6 +17,6 @@ app.use(cors())
 app.use('/auth', auth)
 app.use('/userData', userData)
 
-app.listen(3200, () => {
+app.listen(PORT, () => {
     console.log('Server is running on port 3200')
 })
