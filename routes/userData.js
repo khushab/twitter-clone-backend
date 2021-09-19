@@ -8,7 +8,7 @@ const Followings = require('../db/models/followings')
 const authorization = require('../middlewares/authorization')
 
 
-// ---------- Test routes-------
+
 router.get('/users', async (req, res) => {
     const users = await Users.query()
     res.send(users)
@@ -24,10 +24,39 @@ router.get('/followings', async (req, res) => {
     res.send(followings)
 })
 
+// get homepage tweets
+router.get('/homepageTweets', authorization, async (req, res) => {
+    try {
+        const id = req.user
+        const followings = await Followings.query()
+        const peopleFollowedByUser = followings.filter((item) => item.userId == id)
+        let userIds = [];
+        for (let i = 0; i < peopleFollowedByUser.length; i++) {
+            userIds.push(peopleFollowedByUser[i]['followingId'])
+        }
+        console.log(userIds)
+        // get the tweets
+        let tweets = [];
+        for (let i = 0; i < userIds.length; i++) {
+            const tweet = await Tweets.query().where('userId', userIds[i]).withGraphFetched('user')
+            if (tweet.length !== 0) {
+                tweets.push(tweet[0])
+
+            }
+        }
+        res.send(tweets)
+
+
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).send('Server Error')
+    }
+})
+
 // profile data
 router.get('/me', authorization, async (req, res) => {
     try {
-        console.log(req)
+        // console.log(req)
         id = req.user
         const profile = await Users.query().findById(id)
         res.send(profile)
