@@ -21,3 +21,5 @@ class Tweets extends Model {
 }
 
 module.exports = Tweets
+
+// join related, graphfetched, modifiers, graph join and graphfetched difference
