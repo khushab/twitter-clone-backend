@@ -19,7 +19,7 @@ module.exports = {
       tableName: 'knex_migrations'
     },
     seeds: {
-      directory: './seeds'
+      directory: '../db/seeds'
     },
     ...knexSnakeCaseMappers
   },
@@ -31,10 +31,10 @@ module.exports = {
       max: 10
     },
     migrations: {
-      directory: './migrations'
+      directory: './db/migrations'
     },
     seeds: {
-      directory: './seeds'
+      directory: './db/seeds'
     },
     ...knexSnakeCaseMappers
   },
