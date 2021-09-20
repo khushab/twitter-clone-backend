@@ -1,4 +1,4 @@
-https://khushabs-twitter-clone-vue.herokuapp.com/
+Live: https://khushabs-twitter-clone-vue.herokuapp.com/
 <h1>Twitter Clone</h1>
 
 1. Built using VueJs, Tailwind, NodeJs, Express, PostgreSQL a full stack social media app (clone of Twitter)
