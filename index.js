@@ -14,6 +14,9 @@ app.use(express.json())
 app.use(cors())
 
 // Routes----
+app.get('/', (req, res) => {
+    res.send('The twitter clone is working')
+})
 app.use('/auth', auth)
 app.use('/userData', userData)
 
